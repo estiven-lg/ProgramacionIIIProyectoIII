@@ -1,4 +1,5 @@
 package com.umg.programacioniiiproyectoiii.model;
+import com.umg.programacioniiiproyectoiii.model.Node;
 
 public class TableData {
 
@@ -302,9 +303,13 @@ public class TableData {
 
         if (!this.get(x, y).getValue().startsWith("=")) {
             return this.get(x, y).getValue();
+        }else{
+            if (Armectic.evalOperation(this.get(x, y).getValue().substring(1)) != null) {
+                return "Error de sintaxis";
+            }else{
+                Node nodeRoot = Node.createTree(this.get(x, y).getValue().substring(1));
+                return String.valueOf(nodeRoot.getTotalValue());
+            }
         }
-
-        return "Error";
-
     }
 }
