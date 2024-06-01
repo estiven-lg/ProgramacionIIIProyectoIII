@@ -1,5 +1,4 @@
-package com.umg.programacioniiiproyectoiii.model;
-import java.util.Map;
+package com.umg.programacioniiiproyectoiii.controller;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -143,7 +142,7 @@ public class Armectic {
         //(?<=[a-zA-z]) el previo caracter es una variable
         //(?=[a-zA-z]) el siguiente caracter no es una variable
 
-        return operation.trim().split("(?<=[-+*/^])|(?=[-+*/^])|(?=[a-zA-z])|(?<=[a-zA-z])|(?<=[()])|(?=[()])");
+        return operation.trim().split("(?<=[-+*/^])|(?=[-+*/^])|(?=[a-zA-z])|(?<=[()])|(?=[()])");
     }
 
     /**
@@ -172,8 +171,6 @@ public class Armectic {
             return "***las operaciones no pueden terminar ni comenzar en signo";
         }
 
-        // valida que no haya letras o numeros a la par de letra
-        verificator = Pattern.compile("(?<=[a-zA-Z0-9])[a-zA-Z]|(?<=[a-zA-Z])[a-zA-Z0-9]").matcher(operation);
 
         if (verificator.find()) {
             return "***no puedes poner variables a par de otras variables";
@@ -191,18 +188,4 @@ public class Armectic {
 
     }
 
-    public static String getEvaluatedOperation(String operation, Map<String, Double> variables) {
-        String text = "";
-        String[] splitOperation = Armectic.operationToArray(operation);
-
-        for (String str : splitOperation) {
-            if (Armectic.isAlpha(str.charAt(0))) {
-                text += String.valueOf(variables.get(str.toUpperCase()));
-            } else {
-                text += str;
-            }
-        }
-
-        return text;
-    }
 }

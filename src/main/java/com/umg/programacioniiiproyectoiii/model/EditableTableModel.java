@@ -2,21 +2,18 @@ package com.umg.programacioniiiproyectoiii.model;
 
 import javax.swing.table.AbstractTableModel;
 
-public class EditableTableModel extends AbstractTableModel {
+public final class EditableTableModel extends AbstractTableModel {
 
     String columnTitles;
-    String Values[][];
     int rowCount = 1000;
-    TableData data;
+    public SheetData data;
 
     public EditableTableModel() {
-        this.data = new TableData();
+        this.data = new SheetData();
         columnTitles = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Values = new String[this.rowCount][columnTitles.length()];
         for (int i = 0; i < this.rowCount; i++) {
             this.setValueAt(Integer.toString(i), i, 0);
         }
-
     }
 
     @Override
@@ -31,9 +28,7 @@ public class EditableTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int column) {
-
-        return this.data.resolve(row, column);
-
+        return this.data.resolve(row, column,false);
     }
 
     @Override
@@ -53,7 +48,6 @@ public class EditableTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object value, int row, int column) {
-
         this.data.insert((String) value, row, column);
     }
 }

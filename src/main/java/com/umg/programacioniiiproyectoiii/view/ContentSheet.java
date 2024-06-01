@@ -1,4 +1,3 @@
-
 package com.umg.programacioniiiproyectoiii.view;
 
 import com.umg.programacioniiiproyectoiii.model.EditableTableModel;
@@ -10,13 +9,12 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
 
-public class ContentTableView extends JPanel {
+public class ContentSheet extends JPanel {
 
     EditableTableModel model;
     JTable table;
 
-    public ContentTableView() {
-
+    public ContentSheet() {
         this.model = new EditableTableModel();
          this.table = new JTable(model) {
             @Override

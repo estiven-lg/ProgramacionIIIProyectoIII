@@ -1,13 +1,15 @@
 package com.umg.programacioniiiproyectoiii.model;
-import com.umg.programacioniiiproyectoiii.model.Node;
 
-public class TableData {
+import com.umg.programacioniiiproyectoiii.controller.Operation;
+import com.umg.programacioniiiproyectoiii.controller.Armectic;
 
-    private TableData left, right, up, down;
+public class SheetData {
+
+    private SheetData left, right, up, down;
     private int idX, idY;
     private String value;
 
-    private TableData(String value, int idX, int idY) {
+    private SheetData(String value, int idX, int idY) {
         this.value = value;
         this.idX = idX;
         this.idY = idY;
@@ -17,7 +19,7 @@ public class TableData {
         this.down = null;
     }
 
-    public TableData() {
+    public SheetData() {
         this.value = null;
         this.idX = -1;
         this.idY = -1;
@@ -27,35 +29,35 @@ public class TableData {
         this.down = null;
     }
 
-    public TableData getLeft() {
+    public SheetData getLeft() {
         return left;
     }
 
-    public void setLeft(TableData left) {
+    public void setLeft(SheetData left) {
         this.left = left;
     }
 
-    public TableData getRight() {
+    public SheetData getRight() {
         return right;
     }
 
-    public void setRight(TableData right) {
+    public void setRight(SheetData right) {
         this.right = right;
     }
 
-    public TableData getUp() {
+    public SheetData getUp() {
         return up;
     }
 
-    public void setUp(TableData up) {
+    public void setUp(SheetData up) {
         this.up = up;
     }
 
-    public TableData getDown() {
+    public SheetData getDown() {
         return down;
     }
 
-    public void setDown(TableData down) {
+    public void setDown(SheetData down) {
         this.down = down;
     }
 
@@ -77,8 +79,8 @@ public class TableData {
      * @param XId id in X of node to search
      * @return the node with id x equal XId or null if are not found
      */
-    private TableData getXById(int XId) {
-        TableData node = this;
+    private SheetData getXById(int XId) {
+        SheetData node = this;
 
         while (node.getRight() != null && node.getIdX() < XId) {
             node = node.getRight();
@@ -97,8 +99,8 @@ public class TableData {
      * @param XId id in Y of node to search
      * @return the node with id Y equal IdY or null if are not found
      */
-    private TableData getYById(int YId) {
-        TableData node = this;
+    private SheetData getYById(int YId) {
+        SheetData node = this;
 
         while (node.getDown() != null && node.getIdY() < YId) {
             node = node.getDown();
@@ -116,9 +118,9 @@ public class TableData {
      *
      * @param node node to insert
      */
-    private void insertX(TableData node) {
-        TableData leftNode = this;
-        TableData rightNode = this.getRight();
+    private void insertX(SheetData node) {
+        SheetData leftNode = this;
+        SheetData rightNode = this.getRight();
 
         while (leftNode.getRight() != null && rightNode.getIdX() < node.idX) {
             leftNode = rightNode;
@@ -140,9 +142,9 @@ public class TableData {
      *
      * @param node node to insert
      */
-    private void insertY(TableData node) {
-        TableData upNode = this;
-        TableData downNode = this.getDown();
+    private void insertY(SheetData node) {
+        SheetData upNode = this;
+        SheetData downNode = this.getDown();
 
         while (downNode != null && downNode.getIdY() < node.idY) {
             upNode = downNode;
@@ -164,7 +166,7 @@ public class TableData {
      *
      * @param node node to remove
      */
-    private void removeX(TableData node) {
+    private void removeX(SheetData node) {
         if (node.getRight() != null) {
             node.getLeft().setRight(node.getRight());
             node.getRight().setLeft(node.getLeft());
@@ -173,7 +175,7 @@ public class TableData {
         }
     }
 
-    private void removeY(TableData node) {
+    private void removeY(SheetData node) {
         if (node.getDown() != null) {
             node.getUp().setDown(node.getDown());
             node.getDown().setUp(node.getUp());
@@ -190,15 +192,15 @@ public class TableData {
      * @param y posion in y axis
      */
     public void insert(String value, int x, int y) {
-        TableData newNode = new TableData(value, x, y);
+        SheetData newNode = new SheetData(value, x, y);
 
         if (this.getYById(y) == null) {
-            this.insertY(new TableData(null, -1, y));
+            this.insertY(new SheetData(null, -1, y));
         }
         this.getYById(y).insertX(newNode);
 
         if (this.getXById(x) == null) {
-            this.insertX(new TableData(null, x, -1));
+            this.insertX(new SheetData(null, x, -1));
         }
         this.getXById(x).insertY(newNode);
     }
@@ -210,7 +212,7 @@ public class TableData {
      * @param y posion in y axis
      */
     public void remove(int x, int y) {
-        TableData deletedNode = this.getXById(x).getYById(y);
+        SheetData deletedNode = this.getXById(x).getYById(y);
 
         this.getYById(y).removeX(deletedNode);
         if (this.getYById(y).getRight() == null) {
@@ -231,7 +233,7 @@ public class TableData {
      * @param y posion in y axis
      * @return
      */
-    public TableData get(int x, int y) {
+    public SheetData get(int x, int y) {
         try {
             return this.getXById(x).getYById(y);
         } catch (Exception e) {
@@ -264,11 +266,11 @@ public class TableData {
      * @return texto to print in console
      */
     public String toStringR() {
-        TableData y = this;
+        SheetData y = this;
         String text = "";
 
         while (y != null) {
-            TableData x = this;
+            SheetData x = this;
             while (x != null) {
                 if (this.get(x.getIdX(), y.getIdY()) != null) {
                     text += this.get(x.getIdX(), y.getIdY()) + "-";
@@ -296,19 +298,24 @@ public class TableData {
         return text;
     }
 
-    public String resolve(int x, int y) {
+    public String resolve(int x, int y, boolean returnZero) {
         if (this.get(x, y) == null) {
-            return "";
+            return returnZero ? "0" : "";
         }
 
         if (!this.get(x, y).getValue().startsWith("=")) {
             return this.get(x, y).getValue();
-        }else{
+        } else {
             if (Armectic.evalOperation(this.get(x, y).getValue().substring(1)) != null) {
                 return "Error de sintaxis";
-            }else{
-                Node nodeRoot = Node.createTree(this.get(x, y).getValue().substring(1));
-                return String.valueOf(nodeRoot.getTotalValue());
+            } else {
+                try {
+                    Operation nodeRoot = Operation.createOperation(this.get(x, y).getValue().substring(1), this);
+                    return String.valueOf(nodeRoot.resolveOperation());
+                } catch (Exception e) {
+                    return "Error de sintaxis";
+
+                }
             }
         }
     }

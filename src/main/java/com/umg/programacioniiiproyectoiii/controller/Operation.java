@@ -1,18 +1,19 @@
-package com.umg.programacioniiiproyectoiii.model;
+package com.umg.programacioniiiproyectoiii.controller;
 
+import com.umg.programacioniiiproyectoiii.model.SheetData;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Stack;
 
-public class Node {
-     private Node left;
-    private Node right;
+public class Operation {
+
+    private Operation left;
+    private Operation right;
     private String label;
     private Double value;
     public static Map<String, Double> variables = new HashMap<>();
 
-    public Node(String label) {
+    public Operation(String label, SheetData data) {
         this.label = label.toUpperCase();
 
         if (Armectic.isNumeric(label)) {
@@ -25,41 +26,27 @@ public class Node {
             return;
         }
 
-        if (variables.get(this.label) != null) {
-            this.value = this.variables.get(this.label);
-            return;
-        }
+        int y = this.label.charAt(0) - 64;
+        int x = Integer.parseInt(this.label.substring(1));
 
-        String newValue = "";
-        Scanner input = new Scanner(System.in);
-        do {
-            System.out.println("Ingresa un valor numerico para '" + this.label + "'");
-            System.out.print(this.label + ":");
-            newValue = input.nextLine();
 
-            if (!Armectic.isNumeric(newValue)) {
-                System.out.println("valor no valido");
-            }
-        } while (!Armectic.isNumeric(newValue));
-
-        this.value = Double.valueOf(newValue);
-        variables.put(this.label, Double.valueOf(newValue));
-
+        this.value = Double.valueOf(data.resolve(x, y, true));
+        variables.put(this.label, this.value);
     }
 
-    public Node getLeft() {
+    public Operation getLeft() {
         return left;
     }
 
-    public void setLeft(Node left) {
+    public void setLeft(Operation left) {
         this.left = left;
     }
 
-    public Node getRight() {
+    public Operation getRight() {
         return right;
     }
 
-    public void setRight(Node right) {
+    public void setRight(Operation right) {
         this.right = right;
     }
 
@@ -79,23 +66,22 @@ public class Node {
         this.value = value;
     }
 
-        public Double getTotalValue() {
+    public Double resolveOperation() {
         if (Armectic.getHierarchy(this.getLabel()) != -1) {
-            return Armectic.calculate(this.getLeft().getTotalValue(), this.getRight().getTotalValue(), this.getLabel());
+            return Armectic.calculate(this.getLeft().resolveOperation(), this.getRight().resolveOperation(), this.getLabel());
         }
         return this.getValue();
     }
-    
 
-    static public Node createTree(String operation) {
-        Stack<Node> tmpStack = new Stack<>();
+    static public Operation createOperation(String operation, SheetData data) {
+        Stack<Operation> tmpStack = new Stack<>();
         String[] listValue = Armectic.operationToPostfix(operation);
         for (String str : listValue) {
             if (Armectic.isAlpha(str.charAt(0)) || Armectic.isNumeric(str)) {
-                Node node = new Node(str);
+                Operation node = new Operation(str, data);
                 tmpStack.push(node);
             } else {
-                Node node = new Node(str);
+                Operation node = new Operation(str, data);
                 node.setRight(tmpStack.pop());
                 node.setLeft(tmpStack.pop());
 
